@@ -1,6 +1,7 @@
 import express from "express"
 import path from "path"
 import { ENV } from "./lib/env.js"
+import { connectDb } from "./lib/db.js"
 const port= ENV.PORT
 const __dirname=path.resolve()
 const app=express()
@@ -16,8 +17,18 @@ if(ENV.NODE_ENV=="production"){
     })
 }
 
-app.listen(port,()=>{
-    console.log(`server running on port ${port}`)
-})
+const startServer=async()=>{
+    try {
+        await connectDb()
+        app.listen(port,()=>{
+        console.log(`server running on port ${port}`)
+        })
+    } catch (error) {
+        console.log("server failed to start",error)
+        process.exit(1)
+    }
+}
+
+startServer()
 
 // help me build an interview clone project 
