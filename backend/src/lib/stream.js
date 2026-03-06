@@ -1,5 +1,5 @@
 import {StreamChat} from "stream-chat"
-import { ENV } from "./env"
+import { ENV } from "./env.js"
 
 const apiSecret=ENV.STREAM_API_SECRET
 const apiKey=ENV.STREAM_API_KEY
@@ -7,7 +7,10 @@ if(!apiSecret || !apiKey){
     throw new Error("Missing Stream API credentials")
 }
 
-export const chatClient=new StreamChat.getInstance(apiKey,apiSecret)
+export const chatClient= StreamChat.getInstance(
+  apiKey,
+  apiSecret,
+);
 
 export const upsertStreamUser=async(userData)=>{
     try {
