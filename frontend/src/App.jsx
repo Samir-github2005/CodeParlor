@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import './App.css'
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
 
 function App() {
