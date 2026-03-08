@@ -116,6 +116,10 @@ export const endSession=async(req,res)=>{
         //check if session is alredy complete
         if(session.status==="completed") res.status(400).json({message:"Session is expired"})
 
+        //delete stream videocall channel
+        const call= streamClient.video.call("default", session.callerId)
+        await call.delete({hard: true})
+
         //delete stream chat channel
         const channel= chatClient.channel("messaging", session.callerId)
         await channel.delete()
