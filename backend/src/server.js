@@ -7,6 +7,7 @@ import {serve} from "inngest/express"
 import { inngest, functions } from "./lib/inngest.js"
 import {clerkMiddleware} from "@clerk/express"
 import chatRoutes from "./routes/chatRoutes.js"
+import sessionRoutes from "./routes/sessionRoutes.js"
 
 const port= ENV.PORT
 const __dirname=path.resolve()
@@ -17,6 +18,7 @@ app.use(clerkMiddleware())
 app.use("/api/inngest",serve({ client: inngest, functions}))
 
 app.use('/api/chat',chatRoutes)
+app.use('/api/session',sessionRoutes)
 
 app.get('/health',(req,res)=>{
     res.send("hey")
