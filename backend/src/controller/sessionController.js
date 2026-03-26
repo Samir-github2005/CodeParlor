@@ -24,7 +24,7 @@ export const createSession=async(req,res)=>{
         })
 
         //create stream chat msg
-        await chatClient.channel("messaging",callerId,{
+        const channel= chatClient.channel("messaging",callerId,{
             name:`${problem} Session`,
             created_by_id:clerkId,
             members:[clerkId]
@@ -40,7 +40,10 @@ export const createSession=async(req,res)=>{
 
 export const getActiveSession=async(req,res)=>{
     try {
-        const session=await Session.find({status:"active"}).populate("host","name profileImage email clerkId").sort({createdAt:-1}).limit(20)
+        const session=await Session.find({status:"active"})
+        .populate("host","name profileImage email clerkId")
+        .populate("participant","name profileImage email clerkId")
+        .sort({createdAt:-1}).limit(20)
         res.status(200).json({session})
     } catch (error) {
         console.log("error in getActiveSession controller", error.message)
@@ -65,7 +68,7 @@ export const getMyRecentSession=async(req,res)=>{
 export const getSessionById=async(req,res)=>{
     try {
        const {id} =req.params
-       const session=await Session.find(id).populate("host","name email profileImage clerkId").populate("partcipant","name email profileImage clerkId")
+       const session=await Session.findById(id).populate("host","name email profileImage clerkId").populate("participant","name email profileImage clerkId")
        if(!session) res.status(404).json({message:"session not found"})
        res.status(200).json({session})
     } catch (error) {
@@ -89,7 +92,7 @@ export const joinSession=async(req,res)=>{
         }
 
         //check if session is full
-        if(session.participant) res.status(409).json({message:"session is full"})
+        if(session.participant) return res.status(409).json({message:"session is full"})
         
         session.participant = userId
         await session.save()
@@ -108,13 +111,13 @@ export const endSession=async(req,res)=>{
         const userId= req.user._id
 
         const session=await Session.findById(id)
-        if(session.participant) res.status(400).json({message:"session is full"})
+        if(!session) return res.status(404).json({message:"session not found"})
 
         //check if user is host
-        if(session.host.toString()!==userId.toString()) res.status(403).json({message:"only host can end the session"})
+        if(session.host.toString()!==userId.toString()) return res.status(403).json({message:"only host can end the session"})
         
         //check if session is alredy complete
-        if(session.status==="completed") res.status(400).json({message:"Session is expired"})
+        if(session.status==="completed") return res.status(400).json({message:"Session is expired"})
 
         //delete stream videocall channel
         const call= streamClient.video.call("default", session.callerId)

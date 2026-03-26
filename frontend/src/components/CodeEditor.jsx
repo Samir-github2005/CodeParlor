@@ -2,13 +2,13 @@ import Editor from '@monaco-editor/react'
 import { Loader2Icon, PlaneIcon } from 'lucide-react'
 import { LANGUAGE_CONFIG } from '../data/problems'
 
-const CodeEditor = ({currentLang,code,isRunning,onLangChange,onCodeChange,onRunCode}) => {
+const CodeEditor = ({selectedLanguage,code,isRunning,onLanguageChange,onCodeChange,onRunCode}) => {
   return (
-    <div className='h-full bg-base-300 flex flex-col'>
-      <div className='flex items-center justify-between p-4 border-b border-base-200'>
-        <div className='flex items-center gap-2'>
-          <img src={LANGUAGE_CONFIG[currentLang].icon} alt={LANGUAGE_CONFIG[currentLang].name} className='size-6'/>
-          <select className='select select-sm' value={currentLang} onChange={onLangChange}>
+    <div className='h-full bg-[#1e1e1e] flex flex-col'>
+      <div className='flex items-center justify-between px-4 py-2.5 bg-[#252526] border-b border-[#3c3c3c]'>
+        <div className='flex items-center gap-2.5'>
+          <img src={LANGUAGE_CONFIG[selectedLanguage]?.icon} alt={LANGUAGE_CONFIG[selectedLanguage]?.name} className='size-5 rounded'/>
+          <select className='select select-xs bg-[#3c3c3c] border-[#555] text-white hover:border-primary transition-colors' value={selectedLanguage} onChange={onLanguageChange}>
             {
               Object.entries(LANGUAGE_CONFIG).map(([Key, lang])=>(
                 <option key={Key} value={Key}>{lang.name}</option>
@@ -16,9 +16,9 @@ const CodeEditor = ({currentLang,code,isRunning,onLangChange,onCodeChange,onRunC
             }
           </select>
         </div>
-        <button onClick={onRunCode} className='btn btn-sm btn-primary' disabled={isRunning}>
+        <button onClick={onRunCode} className='btn btn-xs btn-primary gap-1.5 px-3' disabled={isRunning}>
           {
-            isRunning?(<><Loader2Icon className='size-4 animate-spin'/>Running ...</>):(<><PlaneIcon className='size-4'/>Run Code</>)
+            isRunning?(<><Loader2Icon className='size-3 animate-spin'/>Running ...</>):(<><PlaneIcon className='size-3'/>Run Code</>)
           }
         </button>
       </div>
@@ -27,7 +27,7 @@ const CodeEditor = ({currentLang,code,isRunning,onLangChange,onCodeChange,onRunC
         height={"100%"}
         value={code}
         onChange={onCodeChange}
-        language={LANGUAGE_CONFIG[currentLang].monacoLang}
+        language={LANGUAGE_CONFIG[selectedLanguage]?.monacoLang}
         theme='vs-dark'
         options={{
           minimap: {
