@@ -1,0 +1,25 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@clerk/express": "^2.0.1",
+    "@stream-io/node-sdk": "^0.7.44",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "inngest": "^3.44.3",
+    "mongoose": "^9.2.3",
+    "stream-chat": "^9.35.1",
+    "talent-iq": "file:.."
+  }
+}
